@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ERC Resolution No. 26 s. 2025 | WESM SPC Update</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        erc: {
+                            blue: '#1e3a8a',
+                            light: '#3b82f6',
+                            accent: '#f59e0b', // Amber for energy
+                            bg: '#f8fafc'
+                        }
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Animation Classes */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .card-hover {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+<body class="bg-erc-bg text-slate-800 font-sans antialiased overflow-x-hidden">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 transition-all duration-300" id="navbar">
+        <div class="glass-panel border-b border-slate-200/50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between h-16 items-center">
+                    <div class="flex items-center gap-3 cursor-pointer" onclick="window.scrollTo(0,0)">
+                        <div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center text-white font-bold shadow-lg flex-shrink-0">
+                            <i data-lucide="zap" class="w-6 h-6"></i>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="font-bold text-lg tracking-tight text-slate-800 leading-tight">ERC Res. 26</span>
+                            <span class="text-[10px] text-red-600 font-medium uppercase tracking-wide">Dev: Engr. Franz Xyrlo I. Tobias, PEE</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Desktop Menu -->
+                    <div class="hidden md:flex space-x-8">
+                        <a href="#highlights" class="text-slate-600 hover:text-erc-blue transition-colors font-medium">Highlights</a>
+                        <a href="#analysis" class="text-slate-600 hover:text-erc-blue transition-colors font-medium">Analysis</a>
+                        <a href="#impact" class="text-slate-600 hover:text-erc-blue transition-colors font-medium">Consumer Impact</a>
+                        <a href="#calculator" class="text-slate-600 hover:text-erc-blue transition-colors font-medium">Calculator</a>
+                    </div>
+
+                    <!-- Mobile Menu Button -->
+                    <div class="md:hidden">
+                        <button id="mobile-menu-btn" class="text-slate-600 hover:text-slate-900 focus:outline-none">
+                            <i data-lucide="menu" class="w-6 h-6"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-slate-100">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#highlights" class="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:text-erc-blue hover:bg-slate-50">Highlights</a>
+                    <a href="#analysis" class="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:text-erc-blue hover:bg-slate-50">Analysis</a>
+                    <a href="#impact" class="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:text-erc-blue hover:bg-slate-50">Consumer Impact</a>
+                    <a href="#calculator" class="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:text-erc-blue hover:bg-slate-50">Calculator</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
+        <div class="absolute inset-0 z-0 opacity-10">
+            <div class="absolute top-0 -left-4 w-72 h-72 bg-blue-400 rounded-full mix-blend-multiply filter blur-xl animate-float"></div>
+            <div class="absolute top-0 -right-4 w-72 h-72 bg-purple-400 rounded-full mix-blend-multiply filter blur-xl animate-float" style="animation-delay: 2s"></div>
+            <div class="absolute -bottom-8 left-20 w-72 h-72 bg-yellow-400 rounded-full mix-blend-multiply filter blur-xl animate-float" style="animation-delay: 4s"></div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+            <span class="inline-block py-1 px-3 rounded-full bg-blue-100 text-blue-800 text-xs font-semibold tracking-wide uppercase mb-4 reveal">Resolution No. 26, Series of 2025</span>
+            <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 reveal" style="transition-delay: 100ms">
+                <span class="gradient-text">WESM Secondary</span><br>
+                <span class="text-slate-800">Price Cap Update</span>
+            </h1>
+            <p class="mt-4 max-w-2xl mx-auto text-xl text-slate-500 reveal" style="transition-delay: 200ms">
+                Amending the pre-emptive mitigating measure in the Wholesale Electricity Spot Market to ensure fair pricing and grid security.
+            </p>
+            
+            <div class="mt-10 flex justify-center gap-4 reveal" style="transition-delay: 300ms">
+                <a href="#highlights" class="px-8 py-3 rounded-full bg-blue-600 text-white font-semibold shadow-lg hover:bg-blue-700 hover:shadow-xl transition-all transform hover:-translate-y-1 flex items-center gap-2">
+                    View New Rates <i data-lucide="arrow-down" class="w-4 h-4"></i>
+                </a>
+                <a href="#simulator" class="px-8 py-3 rounded-full bg-white text-slate-700 font-semibold shadow-lg border border-slate-200 hover:bg-slate-50 hover:shadow-xl transition-all transform hover:-translate-y-1 flex items-center gap-2">
+                    Try Simulator <i data-lucide="play-circle" class="w-4 h-4"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Key Highlights Cards -->
+    <section id="highlights" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-3xl font-bold text-slate-900">Key Figures</h2>
+                <p class="mt-4 text-lg text-slate-600">The core amendments introduced by Resolution No. 26.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- SPC Card -->
+                <div class="bg-gradient-to-br from-blue-50 to-white p-8 rounded-2xl border border-blue-100 shadow-sm card-hover reveal" style="transition-delay: 100ms">
+                    <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center text-blue-600 mb-6">
+                        <i data-lucide="tag" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wider">New Secondary Price Cap</h3>
+                    <div class="mt-2 flex items-baseline">
+                        <span class="text-4xl font-extrabold text-slate-900">₱7,423</span>
+                        <span class="ml-2 text-slate-500">/MWh</span>
+                    </div>
+                    <div class="mt-4 flex items-center text-sm">
+                        <span class="text-green-600 font-medium flex items-center">
+                            <i data-lucide="arrow-up-right" class="w-4 h-4 mr-1"></i> +19%
+                        </span>
+                        <span class="ml-2 text-slate-400">from ₱6,245</span>
+                    </div>
+                    <p class="mt-4 text-sm text-slate-600">
+                        Imposed when the CPT is breached to mitigate extreme price volatility.
+                    </p>
+                </div>
+
+                <!-- CPT Card -->
+                <div class="bg-gradient-to-br from-amber-50 to-white p-8 rounded-2xl border border-amber-100 shadow-sm card-hover reveal" style="transition-delay: 200ms">
+                    <div class="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center text-amber-600 mb-6">
+                        <i data-lucide="alert-triangle" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wider">Cumulative Price Threshold</h3>
+                    <div class="mt-2 flex items-baseline">
+                        <span class="text-4xl font-extrabold text-slate-900">₱12,413</span>
+                        <span class="ml-2 text-slate-500">/MWh</span>
+                    </div>
+                    <div class="mt-4 flex items-center text-sm">
+                        <span class="text-slate-600 font-medium">Trigger Level</span>
+                    </div>
+                    <p class="mt-4 text-sm text-slate-600">
+                        The rolling average GWAP threshold over 72 hours that activates the SPC.
+                    </p>
+                </div>
+
+                <!-- Rolling Period Card -->
+                <div class="bg-gradient-to-br from-purple-50 to-white p-8 rounded-2xl border border-purple-100 shadow-sm card-hover reveal" style="transition-delay: 300ms">
+                    <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center text-purple-600 mb-6">
+                        <i data-lucide="clock" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wider">Rolling Period</h3>
+                    <div class="mt-2 flex items-baseline">
+                        <span class="text-4xl font-extrabold text-slate-900">72</span>
+                        <span class="ml-2 text-slate-500">Hours</span>
+                    </div>
+                    <div class="mt-4 flex items-center text-sm">
+                        <span class="text-slate-600 font-medium">3 Days Window</span>
+                    </div>
+                    <p class="mt-4 text-sm text-slate-600">
+                        Maintained to effectively capture abrupt and sustained price spikes.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Analysis & Charts Section -->
+    <section id="analysis" class="py-20 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12 reveal">
+                <h2 class="text-3xl font-bold text-slate-900">Analytical Breakdown</h2>
+                <p class="mt-4 text-slate-600">Understanding the data behind Resolution No. 26.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                <!-- Chart 1: Price Comparison -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm reveal">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-lg font-bold text-slate-900">1. SPC & CPT Update</h3>
+                        <div class="p-2 bg-blue-50 rounded-lg text-blue-600">
+                            <i data-lucide="bar-chart-2" class="w-5 h-5"></i>
+                        </div>
+                    </div>
+                    <div class="relative h-64">
+                        <canvas id="priceComparisonChart"></canvas>
+                    </div>
+                    <p class="mt-4 text-xs text-slate-400 text-center">Comparison of 2021 vs 2025 Rates</p>
+                </div>
+
+                <!-- Chart 2: Daily Load Ranking -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm reveal" style="transition-delay: 100ms">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-lg font-bold text-slate-900">2. Daily System Load Profile</h3>
+                        <div class="p-2 bg-purple-50 rounded-lg text-purple-600">
+                            <i data-lucide="trending-up" class="w-5 h-5"></i>
+                        </div>
+                    </div>
+                    <div class="relative h-64">
+                        <canvas id="loadRankingChart"></canvas>
+                    </div>
+                    <p class="mt-4 text-xs text-slate-400 text-center">Average Load (MW) per Day - Basis for 3-Day Rolling Period</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Chart 3: Interval Composition -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm reveal lg:col-span-1" style="transition-delay: 200ms">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-lg font-bold text-slate-900">3. CPT Composition</h3>
+                        <div class="p-2 bg-amber-50 rounded-lg text-amber-600">
+                            <i data-lucide="pie-chart" class="w-5 h-5"></i>
+                        </div>
+                    </div>
+                    <div class="relative h-64">
+                        <canvas id="intervalChart"></canvas>
+                    </div>
+                    <p class="mt-4 text-xs text-slate-400 text-center">Breakdown of the 24-hour Trading Day</p>
+                </div>
+
+                <!-- Visual Timeline -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm reveal lg:col-span-2" style="transition-delay: 200ms">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-lg font-bold text-slate-900">Daily Interval Classification Timeline</h3>
+                        <div class="p-2 bg-green-50 rounded-lg text-green-600">
+                            <i data-lucide="activity" class="w-5 h-5"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <!-- Legend -->
+                        <div class="flex gap-4 text-xs flex-wrap">
+                            <div class="flex items-center"><div class="w-3 h-3 bg-red-500 rounded-full mr-1"></div> Spike (1100-1600H)</div>
+                            <div class="flex items-center"><div class="w-3 h-3 bg-orange-400 rounded-full mr-1"></div> Peak (1000H, 1700-2100H)</div>
+                            <div class="flex items-center"><div class="w-3 h-3 bg-blue-400 rounded-full mr-1"></div> Off-Peak 2</div>
+                            <div class="flex items-center"><div class="w-3 h-3 bg-blue-200 rounded-full mr-1"></div> Off-Peak 1</div>
+                        </div>
+
+                        <!-- Visual Day Timeline -->
+                        <div class="relative pt-2">
+                            <div class="h-8 bg-slate-100 rounded-full flex overflow-hidden border border-slate-200">
+                                <!-- 0100 -->
+                                <div class="h-full bg-blue-400 w-[4.16%]" title="0100H: 2nd Off-Peak"></div>
+                                <!-- 0200-0700 (6 hours) -->
+                                <div class="h-full bg-blue-200 w-[25%]" title="0200H-0700H: 1st Off-Peak"></div>
+                                <!-- 0800-0900 (2 hours) -->
+                                <div class="h-full bg-blue-400 w-[8.33%]" title="0800H-0900H: 2nd Off-Peak"></div>
+                                <!-- 1000 (1 hour) -->
+                                <div class="h-full bg-orange-400 w-[4.16%]" title="1000H: Peak"></div>
+                                <!-- 1100-1600 (6 hours) -->
+                                <div class="h-full bg-red-500 w-[25%]" title="1100H-1600H: Price Spike"></div>
+                                <!-- 1700-2100 (5 hours) -->
+                                <div class="h-full bg-orange-400 w-[20.83%]" title="1700H-2100H: Peak"></div>
+                                <!-- 2200-2400 (3 hours) -->
+                                <div class="h-full bg-blue-400 w-[12.5%]" title="2200H-2400H: 2nd Off-Peak"></div>
+                            </div>
+                            <div class="flex justify-between text-xs text-slate-400 mt-2 font-mono">
+                                <span>00:00</span>
+                                <span>06:00</span>
+                                <span>12:00</span>
+                                <span>18:00</span>
+                                <span>24:00</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-50 p-4 rounded-lg border border-slate-100">
+                            <h4 class="text-sm font-semibold text-slate-700 mb-1">Impact on Pricing</h4>
+                            <p class="text-sm text-slate-600 leading-relaxed">
+                                The CPT (₱12,413) is higher than the average price because it accounts for these "Spike" intervals where peaking plants (often Oil/LNG) set the price. The 3-day rolling window is designed to capture sustained high prices during the high-demand days (Tuesday-Wednesday).
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Consumer Impact Section -->
+    <section id="impact" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-3xl font-bold text-slate-900">Consumer & Utility Impact</h2>
+                <p class="mt-4 text-slate-600">What these changes mean for Distribution Utilities (DUs) and End-Users.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <!-- Impact on Utilities -->
+                <div class="relative group reveal">
+                    <div class="absolute -inset-0.5 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl opacity-75 group-hover:opacity-100 transition duration-200 blur"></div>
+                    <div class="relative bg-white p-8 rounded-2xl h-full">
+                        <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center text-blue-600 mb-6">
+                            <i data-lucide="building-2" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-4">Distribution Utilities</h3>
+                        <ul class="space-y-4">
+                            <li class="flex items-start">
+                                <i data-lucide="check" class="w-5 h-5 text-green-500 mt-1 mr-3 flex-shrink-0"></i>
+                                <p class="text-slate-600 text-sm">
+                                    <strong class="text-slate-800">Higher Exposure Threshold:</strong> DUs exposed to the spot market will see prices rise higher (up to ₱12,413 avg) before the cap protection kicks in, compared to the previous ₱9,000 CPT.
+                                </p>
+                            </li>
+                            <li class="flex items-start">
+                                <i data-lucide="check" class="w-5 h-5 text-green-500 mt-1 mr-3 flex-shrink-0"></i>
+                                <p class="text-slate-600 text-sm">
+                                    <strong class="text-slate-800">Supply Security:</strong> The new rates ensure that peaking plants (Peakers) recover their fuel costs, reducing the risk of plants shutting down during critical demand, thereby stabilizing supply for DUs.
+                                </p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Impact on Consumers -->
+                <div class="relative group reveal" style="transition-delay: 100ms">
+                    <div class="absolute -inset-0.5 bg-gradient-to-r from-amber-500 to-orange-600 rounded-2xl opacity-75 group-hover:opacity-100 transition duration-200 blur"></div>
+                    <div class="relative bg-white p-8 rounded-2xl h-full">
+                        <div class="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center text-amber-600 mb-6">
+                            <i data-lucide="users" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-4">Residential Consumers</h3>
+                        <ul class="space-y-4">
+                            <li class="flex items-start">
+                                <i data-lucide="arrow-up" class="w-5 h-5 text-amber-500 mt-1 mr-3 flex-shrink-0"></i>
+                                <p class="text-slate-600 text-sm">
+                                    <strong class="text-slate-800">Generation Charge:</strong> During peak summer months, the Generation Charge component of the bill may see a slight increase since the capped price (SPC) is now 19% higher (₱7,423 vs ₱6,245).
+                                </p>
+                            </li>
+                            <li class="flex items-start">
+                                <i data-lucide="shield-check" class="w-5 h-5 text-green-500 mt-1 mr-3 flex-shrink-0"></i>
+                                <p class="text-slate-600 text-sm">
+                                    <strong class="text-slate-800">Protection Mechanism:</strong> Despite the increase, the mechanism prevents runaway prices (e.g., ₱32,000/MWh) from sustaining for long periods, protecting consumers from extreme bill shocks.
+                                </p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-8 bg-blue-50 border border-blue-100 rounded-xl p-6 reveal text-center">
+                <p class="text-sm text-blue-800 font-medium">
+                    <i data-lucide="info" class="w-4 h-4 inline-block mr-1 align-text-bottom"></i>
+                    <strong>Key Takeaway:</strong> While the cap has increased to reflect real fuel costs (Coal/LNG), it remains a vital safeguard to limit extreme volatility while ensuring power plants remain operational.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Additional Compensation Calculator -->
+    <section id="calculator" class="py-20 bg-slate-50 border-t border-slate-200">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12 reveal">
+                <h2 class="text-3xl font-bold text-slate-900">Compensation Calculator</h2>
+                <p class="mt-4 text-slate-600">Estimate recoverable costs under Annex A guidelines.</p>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden reveal">
+                <div class="grid grid-cols-1 md:grid-cols-5 h-full">
+                    
+                    <!-- Form Side -->
+                    <div class="p-8 md:col-span-3 space-y-6">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-2">Plant Technology</label>
+                            <select id="calcTech" class="w-full rounded-lg border-slate-300 border p-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all">
+                                <option value="coal">Coal</option>
+                                <option value="geothermal">Geothermal</option>
+                                <option value="hydro">Hydro</option>
+                                <option value="solar">Solar/Wind</option>
+                                <option value="oil">Oil-Based</option>
+                                <option value="lng">Natural Gas (LNG)</option>
+                            </select>
+                            <p class="text-xs text-slate-500 mt-1">Select the generation technology type.</p>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-2">Fuel Cost</label>
+                                <div class="relative">
+                                    <span class="absolute left-3 top-3 text-slate-400">₱</span>
+                                    <input type="number" id="calcFuel" placeholder="0.00" class="w-full rounded-lg border-slate-300 border p-3 pl-8 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-2">VOM Cost</label>
+                                <div class="relative">
+                                    <span class="absolute left-3 top-3 text-slate-400">₱</span>
+                                    <input type="number" id="calcVom" placeholder="0.00" class="w-full rounded-lg border-slate-300 border p-3 pl-8 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all">
+                                </div>
+                            </div>
+                        </div>
+
+                        <button onclick="calculateCompensation()" class="w-full bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition-colors shadow-lg shadow-blue-200">
+                            Check Eligibility & Calculate
+                        </button>
+                    </div>
+
+                    <!-- Result Side -->
+                    <div class="bg-slate-50 p-8 md:col-span-2 flex flex-col justify-center border-l border-slate-100" id="calcResultPanel">
+                        <div class="text-center">
+                            <p class="text-sm text-slate-500 uppercase tracking-wide font-semibold mb-2">Recoverable Amount</p>
+                            <h3 class="text-3xl font-bold text-slate-900 mb-1" id="calcAmount">₱0.00</h3>
+                            <span class="inline-block px-3 py-1 bg-slate-200 text-slate-600 rounded-full text-xs font-medium mt-2" id="calcStatus">Waiting for input...</span>
+                        </div>
+                        <div class="mt-8 text-xs text-slate-400 leading-relaxed text-center">
+                            Note: Recoverable Amount = (Fuel + VOM) - SPC (₱7,423). Only specific technologies are eligible per Resolution No. 26.
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Simulator -->
+    <section id="simulator" class="py-20 bg-slate-900 text-white relative overflow-hidden">
+        <!-- Background decorative elements -->
+        <div class="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-blue-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
+        <div class="absolute bottom-0 left-0 -ml-20 -mb-20 w-96 h-96 bg-purple-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
+
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-12 reveal">
+                <span class="text-blue-400 font-semibold tracking-wide uppercase text-sm">Interactive Tool</span>
+                <h2 class="text-3xl md:text-4xl font-bold mt-2">SPC Trigger Simulator</h2>
+                <p class="mt-4 text-slate-300">Simulate market conditions to see if the Secondary Price Cap would be triggered.</p>
+            </div>
+
+            <div class="bg-slate-800/50 backdrop-blur-md rounded-2xl border border-slate-700 p-8 reveal shadow-2xl">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                    <!-- Controls -->
+                    <div class="space-y-8">
+                        <div>
+                            <label class="flex justify-between text-sm font-medium text-slate-300 mb-2">
+                                <span>Average GWAP (Last 72h)</span>
+                                <span class="text-blue-400" id="gwapValueDisplay">₱6,000</span>
+                            </label>
+                            <input type="range" id="gwapSlider" min="2000" max="20000" step="100" value="6000" 
+                                class="w-full h-2 bg-slate-600 rounded-lg appearance-none cursor-pointer accent-blue-500">
+                            <div class="flex justify-between text-xs text-slate-500 mt-1">
+                                <span>₱2k</span>
+                                <span>₱20k</span>
+                            </div>
+                        </div>
+
+                        <!-- Island Outage Toggle -->
+                        <div class="flex items-center justify-between p-4 bg-slate-700/50 rounded-lg border border-slate-600">
+                            <div>
+                                <span class="text-sm font-semibold text-white block">Regional Grid Outage</span>
+                                <span class="text-xs text-slate-400">Simulate island disconnection</span>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="islandToggle" class="sr-only peer" onchange="updateSimulator()">
+                                <div class="w-11 h-6 bg-slate-600 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                            </label>
+                        </div>
+
+                        <div class="p-4 bg-slate-700/50 rounded-lg border border-slate-600">
+                            <h4 class="text-sm font-semibold text-white mb-2 flex items-center gap-2">
+                                <i data-lucide="info" class="w-4 h-4"></i> Logic
+                            </h4>
+                            <p class="text-xs text-slate-300 leading-relaxed" id="logicText">
+                                The <strong>Secondary Price Cap (SPC)</strong> of ₱7,423/MWh is imposed only when the rolling average GWAP over a 72-hour period exceeds the <strong>Cumulative Price Threshold (CPT)</strong> of ₱12,413/MWh.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Result Display -->
+                    <div class="flex flex-col justify-center items-center text-center p-6 rounded-xl bg-slate-900 border border-slate-700 transition-colors duration-300" id="resultCard">
+                        <div class="w-20 h-20 rounded-full flex items-center justify-center mb-4 transition-colors duration-300" id="statusIconBg">
+                            <i data-lucide="check-circle" class="w-10 h-10 text-white" id="statusIcon"></i>
+                        </div>
+                        
+                        <h3 class="text-2xl font-bold mb-1" id="statusTitle">Normal Market</h3>
+                        <p class="text-sm text-slate-400 mb-6" id="statusDesc">Prices are within normal range.</p>
+                        
+                        <div class="w-full border-t border-slate-700 pt-6">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm text-slate-400">Clearing Price Cap</span>
+                                <span class="font-mono font-bold text-lg" id="activeCap">₱32,000</span>
+                            </div>
+                            <p class="text-xs text-slate-500" id="capLabel">Standard Offer Cap</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Annex A / Rules Section -->
+    <section id="rules" class="py-20 bg-white">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12 reveal">
+                <h2 class="text-3xl font-bold text-slate-900">Annex A: Implementing Rules</h2>
+                <p class="mt-4 text-slate-600">Essential guidelines from the "Rules on the Imposition of Secondary Price Cap".</p>
+            </div>
+
+            <div class="space-y-4 reveal">
+                <!-- Accordion Item 1 -->
+                <div class="border border-slate-200 rounded-lg overflow-hidden">
+                    <button class="w-full px-6 py-4 text-left bg-slate-50 hover:bg-slate-100 flex justify-between items-center transition-colors focus:outline-none" onclick="toggleAccordion('rule1')">
+                        <span class="font-semibold text-slate-800">Who is eligible for Additional Compensation?</span>
+                        <i data-lucide="chevron-down" class="w-5 h-5 text-slate-400 transform transition-transform" id="icon-rule1"></i>
+                    </button>
+                    <div id="rule1" class="hidden px-6 py-4 bg-white text-slate-600 text-sm leading-relaxed border-t border-slate-100">
+                        <p class="mb-2">Only <strong>Oil-based</strong> and <strong>LNG (Liquified Natural Gas)</strong> power plants are eligible.</p>
+                        <p>They can recover the unrecovered portion of their verified fuel and Variable Operating and Maintenance (VOM) costs if the SPC is insufficient to cover these costs. Other technologies are <strong>not eligible</strong>.</p>
+                    </div>
+                </div>
+
+                <!-- Accordion Item 2 -->
+                <div class="border border-slate-200 rounded-lg overflow-hidden">
+                    <button class="w-full px-6 py-4 text-left bg-slate-50 hover:bg-slate-100 flex justify-between items-center transition-colors focus:outline-none" onclick="toggleAccordion('rule2')">
+                        <span class="font-semibold text-slate-800">When does the SPC end?</span>
+                        <i data-lucide="chevron-down" class="w-5 h-5 text-slate-400 transform transition-transform" id="icon-rule2"></i>
+                    </button>
+                    <div id="rule2" class="hidden px-6 py-4 bg-white text-slate-600 text-sm leading-relaxed border-t border-slate-100">
+                        The Secondary Price Cap remains in force until the rolling Generator Weighted Average Price (GWAP), measured over the 72-hour period, falls below the Cumulative Price Threshold (CPT) of ₱12,413/MWh.
+                    </div>
+                </div>
+
+                <!-- Accordion Item 3 -->
+                <div class="border border-slate-200 rounded-lg overflow-hidden">
+                    <button class="w-full px-6 py-4 text-left bg-slate-50 hover:bg-slate-100 flex justify-between items-center transition-colors focus:outline-none" onclick="toggleAccordion('rule3')">
+                        <span class="font-semibold text-slate-800">Regional/Island Application</span>
+                        <i data-lucide="chevron-down" class="w-5 h-5 text-slate-400 transform transition-transform" id="icon-rule3"></i>
+                    </button>
+                    <div id="rule3" class="hidden px-6 py-4 bg-white text-slate-600 text-sm leading-relaxed border-t border-slate-100">
+                        The regional/island SPC applies when a grid interconnection (e.g., HVDC) is on outage. It uses the same parameters (SPC value, CPT, rolling period) as the system-wide SPC but applies specifically to the affected region's GWAP.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-12 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="mb-4 md:mb-0">
+                <span class="font-bold text-white text-lg">ERC Resolution No. 26</span>
+                <p class="text-sm mt-1">Series of 2025</p>
+            </div>
+            <div class="text-sm text-center md:text-right">
+                <p>Based on the official publication by the Energy Regulatory Commission.</p>
+                <p class="mt-1">Promulgated November 26, 2025.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // 1. Mobile Menu Toggle
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+        });
+
+        // 2. Scroll Animation
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => {
+            observer.observe(el);
+        });
+
+        // 3. Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 20) {
+                nav.classList.add('shadow-md');
+            } else {
+                nav.classList.remove('shadow-md');
+            }
+        });
+
+        // 4. Accordion Logic
+        function toggleAccordion(id) {
+            const content = document.getElementById(id);
+            const icon = document.getElementById(`icon-${id}`);
+            
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                icon.classList.add('rotate-180');
+            } else {
+                content.classList.add('hidden');
+                icon.classList.remove('rotate-180');
+            }
+        }
+
+        // 5. Calculator Logic
+        function calculateCompensation() {
+            const tech = document.getElementById('calcTech').value;
+            const fuel = parseFloat(document.getElementById('calcFuel').value) || 0;
+            const vom = parseFloat(document.getElementById('calcVom').value) || 0;
+            
+            const resultPanel = document.getElementById('calcResultPanel');
+            const amountEl = document.getElementById('calcAmount');
+            const statusEl = document.getElementById('calcStatus');
+            
+            const SPC = 7423;
+
+            // Check eligibility first (Article IV, Section 1)
+            if (tech !== 'oil' && tech !== 'lng') {
+                resultPanel.classList.remove('bg-green-50');
+                resultPanel.classList.add('bg-red-50');
+                amountEl.classList.remove('text-green-600');
+                amountEl.classList.add('text-red-600');
+                
+                amountEl.textContent = "Not Eligible";
+                statusEl.textContent = "Only Oil-based & LNG plants qualify";
+                statusEl.className = "inline-block px-3 py-1 bg-red-200 text-red-800 rounded-full text-xs font-medium mt-2";
+                return;
+            }
+
+            // Calculation (Article IV, Section 2)
+            const totalCost = fuel + vom;
+            let recoverable = totalCost - SPC;
+            
+            if (recoverable <= 0) {
+                resultPanel.classList.remove('bg-red-50');
+                resultPanel.classList.add('bg-slate-50');
+                amountEl.classList.remove('text-green-600', 'text-red-600');
+                amountEl.classList.add('text-slate-900');
+                
+                amountEl.textContent = "₱0.00";
+                statusEl.textContent = "Costs covered by SPC";
+                statusEl.className = "inline-block px-3 py-1 bg-slate-200 text-slate-800 rounded-full text-xs font-medium mt-2";
+            } else {
+                resultPanel.classList.remove('bg-red-50', 'bg-slate-50');
+                resultPanel.classList.add('bg-green-50');
+                amountEl.classList.remove('text-red-600', 'text-slate-900');
+                amountEl.classList.add('text-green-600');
+                
+                amountEl.textContent = "₱" + recoverable.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                statusEl.textContent = "Recoverable per MWh";
+                statusEl.className = "inline-block px-3 py-1 bg-green-200 text-green-800 rounded-full text-xs font-medium mt-2";
+            }
+        }
+
+        // 6. Chart.js Initialization
+        
+        // Chart 1: Price Comparison
+        const ctx1 = document.getElementById('priceComparisonChart').getContext('2d');
+        new Chart(ctx1, {
+            type: 'bar',
+            data: {
+                labels: ['Old Resolution (2021)', 'New Resolution (2025)'],
+                datasets: [
+                    {
+                        label: 'SPC Value (PhP/MWh)',
+                        data: [6245, 7423],
+                        backgroundColor: ['#cbd5e1', '#3b82f6'],
+                        borderRadius: 6,
+                        barThickness: 40
+                    },
+                    {
+                        label: 'CPT Threshold (PhP/MWh)',
+                        data: [9000, 12413],
+                        backgroundColor: ['#e2e8f0', '#f59e0b'],
+                        borderRadius: 6,
+                        barThickness: 40
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom' }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { callback: function(value) { return '₱' + value.toLocaleString(); } }
+                    },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+
+        // Chart 2: Daily Load Ranking (Table 3 Data)
+        const ctx2 = document.getElementById('loadRankingChart').getContext('2d');
+        new Chart(ctx2, {
+            type: 'bar',
+            data: {
+                labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+                datasets: [{
+                    label: 'Average Load (MW)',
+                    data: [13046, 14410, 14739, 14699, 14575, 14514, 13876],
+                    backgroundColor: [
+                        '#cbd5e1', // Sun
+                        '#93c5fd', // Mon
+                        '#ef4444', // Tue (Spike)
+                        '#ef4444', // Wed (Spike)
+                        '#f97316', // Thu (Peak)
+                        '#93c5fd', // Fri
+                        '#cbd5e1'  // Sat
+                    ],
+                    borderRadius: 6,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed.y !== null) {
+                                    label += context.parsed.y.toLocaleString() + ' MW';
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        min: 12000,
+                        ticks: { callback: function(value) { return value.toLocaleString() + ' MW'; } }
+                    },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+
+        // Chart 3: Interval Composition (Table 2 Data)
+        const ctx3 = document.getElementById('intervalChart').getContext('2d');
+        new Chart(ctx3, {
+            type: 'doughnut',
+            data: {
+                labels: ['Price Spike (High Demand)', 'Peak', 'Off-Peak 1', 'Off-Peak 2'],
+                datasets: [{
+                    data: [6, 6, 6, 6], // 24 hours distributed evenly in classification count
+                    backgroundColor: [
+                        '#ef4444', // Spike
+                        '#f97316', // Peak
+                        '#bfdbfe', // Off-Peak 1
+                        '#60a5fa'  // Off-Peak 2
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'right' }
+                }
+            }
+        });
+
+        // 7. Simulator Logic
+        const slider = document.getElementById('gwapSlider');
+        const display = document.getElementById('gwapValueDisplay');
+        const resultCard = document.getElementById('resultCard');
+        const statusTitle = document.getElementById('statusTitle');
+        const statusDesc = document.getElementById('statusDesc');
+        const activeCap = document.getElementById('activeCap');
+        const capLabel = document.getElementById('capLabel');
+        const statusIcon = document.getElementById('statusIcon');
+        const statusIconBg = document.getElementById('statusIconBg');
+        const islandToggle = document.getElementById('islandToggle');
+        const logicText = document.getElementById('logicText');
+
+        const CPT_THRESHOLD = 12413;
+        const SPC_VALUE = 7423;
+        const OFFER_CAP = 32000;
+
+        function updateSimulator() {
+            const val = parseInt(slider.value);
+            display.textContent = `₱${val.toLocaleString()}`;
+            const isIslandOutage = islandToggle.checked;
+
+            if (isIslandOutage) {
+                logicText.innerHTML = `<strong>Regional SPC Active:</strong> Because an interconnection outage is simulated, the SPC logic applies specifically to the isolated region's GWAP.`;
+            } else {
+                logicText.innerHTML = `The <strong>Secondary Price Cap (SPC)</strong> of ₱7,423/MWh is imposed only when the rolling average GWAP over a 72-hour period exceeds the <strong>Cumulative Price Threshold (CPT)</strong> of ₱12,413/MWh.`;
+            }
+
+            if (val > CPT_THRESHOLD) {
+                // SPC Triggered State
+                resultCard.classList.remove('bg-slate-900');
+                resultCard.classList.add('bg-red-900/30', 'border-red-500/50');
+                
+                statusIconBg.classList.remove('bg-blue-600', 'bg-green-600');
+                statusIconBg.classList.add('bg-red-500');
+                
+                statusIcon.setAttribute('data-lucide', 'alert-octagon');
+                lucide.createIcons(); 
+
+                statusTitle.textContent = isIslandOutage ? "REGIONAL SPC TRIGGERED" : "SYSTEM SPC TRIGGERED";
+                statusTitle.classList.add('text-red-400');
+                
+                const scopeText = isIslandOutage ? "Regional" : "Rolling";
+                statusDesc.textContent = `${scopeText} GWAP (₱${val.toLocaleString()}) exceeds CPT.`;
+                
+                activeCap.textContent = `₱${SPC_VALUE.toLocaleString()}`;
+                activeCap.classList.add('text-red-400');
+                capLabel.textContent = "Secondary Price Cap Active";
+            } else {
+                // Normal State
+                resultCard.classList.add('bg-slate-900');
+                resultCard.classList.remove('bg-red-900/30', 'border-red-500/50');
+                
+                statusIconBg.classList.add('bg-green-600');
+                statusIconBg.classList.remove('bg-red-500');
+                
+                statusIcon.setAttribute('data-lucide', 'check-circle');
+                lucide.createIcons();
+
+                statusTitle.textContent = "Normal Market";
+                statusTitle.classList.remove('text-red-400');
+                statusDesc.textContent = `GWAP is below the CPT threshold.`;
+                
+                activeCap.textContent = `₱${OFFER_CAP.toLocaleString()}`;
+                activeCap.classList.remove('text-red-400');
+                capLabel.textContent = "Standard Offer Cap";
+            }
+        }
+
+        slider.addEventListener('input', updateSimulator);
+        
+        // Initial call
+        updateSimulator();
+
+    </script>
+</body>
+</html>
